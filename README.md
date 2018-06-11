@@ -68,6 +68,10 @@ javaBean较map相比，可能更具有维护性，每一个字段自解释每一
     点击"新建版本"，输入1.0.0
     左侧的组管理，输入group，点击"创建"
     在右侧添加两个配置，分别为str=hello, int=7758
+    
+配置中心页面示例，请访问：http://chen.onhaiyang.com/login <br>
+输入用户名：/configserver/demoproject <br>
+密码：root <br>
 
 ### 在代码里使用配置中心的配置
 
