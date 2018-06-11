@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+		xmlns:tool="http://www.springframework.org/schema/tool"
+	    xmlns:config="https://com.github.chenhaiyangs/ruubypay-framework-configx/config"
+		targetNamespace="https://com.github.chenhaiyangs/ruubypay-framework-configx/config"
+        elementFormDefault="qualified"
+	>
+
+	<import namespace="http://www.springframework.org/schema/beans" />
+	<import namespace="http://www.springframework.org/schema/tool" />
+
+	<element name="profile" type="config:profile" />
+	<element name="group" type="config:group" />
+	<element name="innerbean" type="config:innerbean" />
+	<element name="outerbean" type="config:outerbean" />
+
+    <element name="encrypt-by-aes" type="config:encrypt-by-aes" />
+    <element name="encrypt-by-des" type="config:encrypt-by-des" />
+
+    <!-- 配置类引用类型 -->
+	<simpleType name="configProfileRef">
+		<annotation>
+			<appinfo>
+				<tool:annotation kind="ref">
+					<tool:assignable-to type="com.ruubypay.framework.configx.zookeeper.ZookeeperConfigProfile" />
+				</tool:annotation>
+			</appinfo>
+		</annotation>
+		<union memberTypes="string" />
+	</simpleType>
+    <!-- 加密接口引用类型 -->
+    <simpleType name="encryptRef">
+        <annotation>
+            <appinfo>
+                <tool:annotation kind="ref">
+                    <tool:assignable-to type="com.ruubypay.framework.configx.Encrypt" />
+                </tool:annotation>
+            </appinfo>
+        </annotation>
+        <union memberTypes="string" />
+    </simpleType>
+    <!-- 配置组引用类型 -->
+    <simpleType name="configGroupRef">
+        <annotation>
+            <appinfo>
+                <tool:annotation kind="ref">
+                    <tool:assignable-to type="com.ruubypay.framework.configx.zookeeper.ZookeeperConfigGroup" />
+                </tool:annotation>
+            </appinfo>
+        </annotation>
+        <union memberTypes="string" />
+    </simpleType>
+
+
+    <complexType name="profile">
+        <attribute name="id" type="string" default="configProfile" />
+        <attribute name="connect-str" type="string" use="required" />
+        <attribute name="root-node" type="string" use="required" />
+        <attribute name="version" type="string" use="required" />
+    </complexType>
+
+    <complexType name="group">
+        <attribute name="id" type="string" use="required" />
+        <attribute name="config-profile-ref" type="config:configProfileRef" default="configProfile" />
+        <attribute name="node" type="string" use="required" />
+        <attribute name="encrypt" type="config:encryptRef"/>
+    </complexType>
+
+	<complexType name="innerbean">
+		<attribute name="id" type="string" use="required"/>
+		<attribute name="bind-class" type="string" use="required"/>
+		<attribute name="node" type="config:configGroupRef" use="required" />
+	</complexType>
+
+    <complexType name="outerbean">
+        <attribute name="id" type="string" use="required"/>
+        <attribute name="bind-ref" type="string" use="required"/>
+        <attribute name="node" type="config:configGroupRef" use="required" />
+    </complexType>
+
+    <complexType name="encrypt-by-aes">
+        <attribute name="id" type="string" use="required"/>
+        <attribute name="key" type="string" use="required"/>
+    </complexType>
+
+    <complexType name="encrypt-by-des">
+        <attribute name="id" type="string" use="required"/>
+        <attribute name="key" type="string" use="required"/>
+    </complexType>
+</schema>

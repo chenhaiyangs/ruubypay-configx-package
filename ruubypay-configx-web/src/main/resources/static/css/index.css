@@ -1,0 +1,39 @@
+.mybtn {
+    margin-left: 0.8em;
+}
+
+.list-group-item.active {
+    background-color: #a9acaf;
+    border-color: #a9acaf;
+}
+
+.container-fluid {
+    margin-top: 5em;
+}
+
+img {
+    opacity: 0.4;
+}
+
+.form-control:focus {
+    border-color: #6c757d;
+    box-shadow:0 0 0 .2rem rgba(108,117,125,.25);
+}
+
+.groups {
+    max-height: 40em;
+    overflow-y: scroll;
+    box-shadow:10px 10px 5px #888888;
+}
+
+
+.datas {
+    max-height: 41em;
+    overflow-y: scroll;
+}
+
+table {
+    word-break: break-all;
+    word-wrap: break-word;
+    font-size: small;
+}
