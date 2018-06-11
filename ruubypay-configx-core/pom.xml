@@ -9,7 +9,7 @@
     <version>1.0.0</version>
 
     <name>ruubypay-framework-configx</name>
-    <url>http://www.example.com</url>
+    <url>https://github.com/chenhaiyangs/ruubypay-configx-package.git</url>
     <description>一款配置中心框架，用于简化配置文件从本地到zookeeper迁移</description>
 
     <properties>
@@ -17,6 +17,41 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <name>Maven Central Staging Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>chenhaiyang</name>
+            <email>chenhy_hebei@126.com</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:https://github.com/chenhaiyangs/ruubypay-ratelimit-bucket4j</connection>
+        <developerConnection>scm:git:https://github.com/chenhaiyangs/ruubypay-ratelimit-bucket4j</developerConnection>
+        <url>https://github.com/chenhaiyangs/ruubypay-ratelimit-bucket4j</url>
+        <tag>v${project.version}</tag>
+    </scm>
 
     <dependencies>
         <!-- 日志框架API -->
@@ -117,6 +152,25 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>release</id>
+        </profile>
+    </profiles>
 </project>
