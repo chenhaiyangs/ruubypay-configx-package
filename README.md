@@ -58,7 +58,7 @@ javaBean较map相比，可能更具有维护性，每一个字段自解释每一
     
 ### 部署配置管理中心界面
 
-    https://gitee.com/chenhys/ruubypay-configx-package.git
+    git clone https://github.com/chenhaiyangs/ruubypay-configx-package.git
     cd ruubypay-configx-package/ruubypay-configx-web
     mvn package 生成一个zip地址
     解压缩zip，修改application.yml的zookeeper和端口地址。即可调用./start.sh启动配置界面
@@ -69,7 +69,7 @@ javaBean较map相比，可能更具有维护性，每一个字段自解释每一
     左侧的组管理，输入group，点击"创建"
     在右侧添加两个配置，分别为str=hello, int=7758
 
-### 使用方式
+### 在代码里使用配置中心的配置
 
 一，导入依赖：
 ```xml
