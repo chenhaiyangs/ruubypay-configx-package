@@ -308,11 +308,11 @@ javaBean和group的绑定默认是按照javaBean的字段名。即，会以字�
 在com.ruubypay.framework.configx.encrypt.helper包下提供了开发阶段用于配置加解密的一些工具。帮助加密和生成可以使用的密钥key。<br/>
 ```java
      //生成一个使用AES算法加密时可以使用的密钥
-     String aesScrect = GenerateKeyUtil.getStringSecturyKeyByAes();
+     String aesSecret = GenerateKeyUtil.getStringSecturyKeyByAes();
 ```
 ```java
      //生成一个使用DES算法加密时可以使用的密钥
-     String desScrect = GenerateKeyUtil.getStringSecturyKeyByDes();
+     String desSecret = GenerateKeyUtil.getStringSecturyKeyByDes();
 ```
 ```java
      //使用AES算法加密原文，获取配置中心可以设置的密文，入参1：原文。入参2，密钥
