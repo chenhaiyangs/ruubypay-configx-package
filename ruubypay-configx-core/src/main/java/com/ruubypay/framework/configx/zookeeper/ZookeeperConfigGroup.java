@@ -1,6 +1,7 @@
 package com.ruubypay.framework.configx.zookeeper;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Objects;
 import com.google.common.base.Throwables;
 import com.ruubypay.framework.configx.AbstractGeneralConfigGroup;
 import com.ruubypay.framework.configx.Encrypt;
@@ -15,11 +16,13 @@ import org.apache.curator.framework.api.GetDataBuilder;
 import org.apache.curator.framework.state.ConnectionStateListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.utils.ZKPaths;
+import org.apache.zookeeper.data.Stat;
 
 import javax.annotation.PreDestroy;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * 配置组节点
@@ -27,7 +30,6 @@ import java.util.Map;
  */
 @Slf4j
 public class ZookeeperConfigGroup extends AbstractGeneralConfigGroup {
-
     /**
      * zk配置中心配置Bean
      */
@@ -142,6 +144,37 @@ public class ZookeeperConfigGroup extends AbstractGeneralConfigGroup {
             client.getCuratorListenable().removeListener(nodeListener);
             client.getConnectionStateListenable().removeListener(connectListener);
             client.close();
+        }
+    }
+
+    @Override
+    public boolean set(String key,String value) {
+        try {
+            return doWrite(key,value);
+        } catch (Exception e) {
+            log.error("set config err group :{},key:{},value:{}",node,key,value,e);
+        }
+        return false;
+    }
+
+    /**
+     * 修改配置中心的值
+     * @param key key
+     * @param value value
+     * @return 返回结果
+     * @throws Exception 抛出异常
+     */
+    private boolean doWrite(String key, String value) throws Exception {
+        //配置在配置中心的路径
+        final String configNode = ZKPaths.makePath(ZKPaths.makePath(configProfile.getVersionRootNode(), node), key);
+
+        Stat stat = client.checkExists().forPath(configNode);
+        if(stat==null){
+            String opResult = client.create().creatingParentsIfNeeded().forPath(configNode, value.getBytes(Charsets.UTF_8));
+            return Objects.equal(configNode, opResult);
+        }else {
+            Stat opResult = client.setData().forPath(configNode, value.getBytes(Charsets.UTF_8));
+            return opResult != null;
         }
     }
 }

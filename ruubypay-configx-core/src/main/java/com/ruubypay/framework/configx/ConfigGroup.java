@@ -16,5 +16,13 @@ public interface ConfigGroup extends Map<String, String>, Closeable, ISubject {
      * @return value
      */
 	String get(String key);
+
+    /**
+     * 更新配置
+     * @param key key key
+     * @param value value value
+     * @return 返回结果，是否更新成功
+     */
+	boolean set(String key,String value);
 	
 }

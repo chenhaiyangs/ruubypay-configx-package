@@ -23,6 +23,7 @@ public abstract class AbstractGeneralConfigGroup extends ConcurrentHashMap<Strin
      */
     private Encrypt encrypt;
 
+
     protected AbstractGeneralConfigGroup(){}
     protected AbstractGeneralConfigGroup(Encrypt encrypt){
         this.encrypt=encrypt;
@@ -46,6 +47,7 @@ public abstract class AbstractGeneralConfigGroup extends ConcurrentHashMap<Strin
         }
         return value;
 	}
+
     /**
      * 重载函数，根据object类型的key获取配置
      * @param key jey
@@ -55,6 +57,17 @@ public abstract class AbstractGeneralConfigGroup extends ConcurrentHashMap<Strin
 	public final String get(Object key) {
 		return get(key.toString());
 	}
+
+    /**
+     * set 即为设置配置中心的key的值，由于存储介质不同，需要具体的子类去实现该函数
+     * @param key key key
+     * @param value value value
+     * @return set success
+     */
+    @Override
+    public boolean set(String key,String value) {
+       throw new UnsupportedOperationException();
+    }
 
     /**
      * 根据key删除配置

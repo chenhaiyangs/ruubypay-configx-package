@@ -37,7 +37,7 @@ public final class ConfigNodeEventListener implements CuratorListener {
 		final WatchedEvent watchedEvent = event.getWatchedEvent();
 		if (watchedEvent != null) {
 
-            log.debug("Watched event: {}" + watchedEvent);
+            log.debug("Watched event: {}",watchedEvent);
 			if (watchedEvent.getState() == KeeperState.SyncConnected) {
 				switch (watchedEvent.getType()) {
 				case NodeChildrenChanged:
