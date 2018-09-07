@@ -23,7 +23,6 @@ public abstract class AbstractGeneralConfigGroup extends ConcurrentHashMap<Strin
      */
     private Encrypt encrypt;
 
-
     protected AbstractGeneralConfigGroup(){}
     protected AbstractGeneralConfigGroup(Encrypt encrypt){
         this.encrypt=encrypt;
@@ -67,6 +66,19 @@ public abstract class AbstractGeneralConfigGroup extends ConcurrentHashMap<Strin
     @Override
     public boolean set(String key,String value) {
        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * 对value进行加密
+     * @param vlaue 要加密的值
+     * @return 返回加密后的结果。可以直接在配置中心存储的格式，如 {cipher}xxxxxxx
+     * @throws Exception 异常
+     */
+    public String encryptValue(String vlaue) throws Exception {
+        if(this.encrypt==null){
+            return vlaue;
+        }
+        return String.format("%s%s",NEED_DECRYPT,encrypt.encrypt(vlaue));
     }
 
     /**
