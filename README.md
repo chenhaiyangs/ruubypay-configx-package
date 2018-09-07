@@ -81,7 +81,7 @@ javaBean较map相比，可能更具有维护性，每一个字段自解释每一
     <dependency>
         <groupId>com.github.chenhaiyangs</groupId>
         <artifactId>ruubypay-configx-core</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
      </dependency>
 ```   
 二，在java代码里直接获取配置
@@ -323,6 +323,23 @@ javaBean和group的绑定默认是按照javaBean的字段名。即，会以字�
     String result = GenerateKeyUtil.getEncryptResultByDes("helloWorld","xxdfsdedsdsd");
 ```
    
+# V1.1.0版本新增功能
+
+鉴于有这样的需求：在运行时程序修改配置中心的某些配置并同步到所有节点<br/>
+因此，在配置组中，直接提供了可以直接修改配置中心配置的方法<br/>
+无需加密数据，使用方式为：
+```java
+   AbstractGeneralConfigGroup node = new ZookeeperConfigGroup(zookeeperConfigProfile,"group");
+   node.set("passsword","root");
+
+ ```
+如果想在配置中心加密存储配置：<br/>
+下面的配置就可以做到在配置中心存储加密的，而拉取到应用内会自动解密，加密存储的前提条件是该配置组有配置支持加密。<br/>
+```java
+      AbstractGeneralConfigGroup node = new ZookeeperConfigGroup(zookeeperConfigProfile,"group");
+      String password = node.encryptValue("root");
+      node.set("password",password);
+ ```
 # 注意事项
 
 一，源代码编译问题

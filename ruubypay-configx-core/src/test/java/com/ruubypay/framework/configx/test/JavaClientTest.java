@@ -15,7 +15,7 @@ public class JavaClientTest{
      * 基本测试
      */
     @Test
-    public void testGroup(){
+    public void testGroup() throws Exception {
         ZookeeperConfigProfile zookeeperConfigProfile
                 = new ZookeeperConfigProfile("localhost:2181",
                 "/config/demoproject","1.0.0");
@@ -29,6 +29,9 @@ public class JavaClientTest{
                 e.printStackTrace();
             }
         }
+        AbstractGeneralConfigGroup node = new ZookeeperConfigGroup(zookeeperConfigProfile,"group");
+        String password = node.encryptValue("root");
+        node.set("password",password);
     }
 
     /**
