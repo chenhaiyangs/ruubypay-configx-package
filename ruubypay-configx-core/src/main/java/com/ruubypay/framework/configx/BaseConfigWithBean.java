@@ -1,6 +1,7 @@
 package com.ruubypay.framework.configx;
 
 import com.ruubypay.framework.configx.observer.IObserver;
+import com.ruubypay.framework.configx.proxy.ConfigBeanProxy;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,6 +17,10 @@ public abstract class BaseConfigWithBean<T> implements IObserver{
      * 真实配置Bean
      */
     private final T config;
+    /**
+     * 真实配置的代理
+     */
+    private final ConfigBeanProxy<T> proxy;
     /**
      * 会影响真实对象的属性值，为空时代表任意属性变化都会刷新对象
      */
@@ -33,6 +38,7 @@ public abstract class BaseConfigWithBean<T> implements IObserver{
         this.node = Objects.requireNonNull(node);
         this.carekeys = carekeys;
         this.config=config;
+        this.proxy=new ConfigBeanProxy<>(config,node);
 
         node.register(this);
         refreshBean();
@@ -42,6 +48,7 @@ public abstract class BaseConfigWithBean<T> implements IObserver{
         this.node = Objects.requireNonNull(node);
         this.carekeys = carekeys;
         this.config=configClass.newInstance();
+        this.proxy=new ConfigBeanProxy<>(config,node);
 
         node.register(this);
         refreshBean();
@@ -82,7 +89,7 @@ public abstract class BaseConfigWithBean<T> implements IObserver{
      * @return 配置类
      */
     public T getConfigBean(){
-        return config;
+        return proxy.getProxy();
     }
     /**
      * 模版方法 自己实现的和Bean类型的配置实现动态绑定的逻辑

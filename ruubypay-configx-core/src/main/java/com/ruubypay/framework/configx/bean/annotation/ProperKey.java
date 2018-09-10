@@ -15,5 +15,11 @@ public @interface ProperKey {
      * key名称
      * @return 返回字段对应的ConfigGroup的配置的key
      */
-    String key();
+    String key() default "";
+
+    /**
+     * 是否需要加密，默认为false
+     * @return 是否需要加密
+     */
+    boolean needEncrypt() default false;
 }

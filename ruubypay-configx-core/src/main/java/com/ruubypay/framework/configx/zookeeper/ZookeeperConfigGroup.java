@@ -167,7 +167,7 @@ public class ZookeeperConfigGroup extends AbstractGeneralConfigGroup {
     private boolean doWrite(String key, String value) throws Exception {
         //配置在配置中心的路径
         final String configNode = ZKPaths.makePath(ZKPaths.makePath(configProfile.getVersionRootNode(), node), key);
-        log.debug("begin set path [{}] value to {[]}",configNode,value);
+        log.debug("begin set path [{}] value to [{}]",configNode,value);
 
         Stat stat = client.checkExists().forPath(configNode);
         if(stat==null){

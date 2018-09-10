@@ -2,8 +2,8 @@ package com.ruubypay.framework.configx.test;
 
 import com.ruubypay.framework.configx.AbstractGeneralConfigGroup;
 import com.ruubypay.framework.configx.Encrypt;
-import com.ruubypay.framework.configx.encrypt.helper.GenerateKeyUtil;
 import com.ruubypay.framework.configx.encrypt.impl.EncryptByAes;
+import com.ruubypay.framework.configx.proxy.ConfigBeanProxy;
 import com.ruubypay.framework.configx.zookeeper.ZookeeperConfigGroup;
 import com.ruubypay.framework.configx.zookeeper.ZookeeperConfigProfile;
 import org.junit.Test;
@@ -99,4 +99,21 @@ public class JavaClientTest{
         System.out.println("框架自动解密的："+result);
     }
 
+    /**
+     * 测试代理
+     */
+    @Test
+    public void testProxy(){
+        DemoBean demoBean = new DemoBean();
+        demoBean.setName("测试代理");
+        demoBean.setaDouble(22.2);
+
+        ConfigBeanProxy proxy =  new ConfigBeanProxy<DemoBean>(demoBean, null);
+        DemoBean b2= (DemoBean) proxy.getProxy();
+        System.out.println(demoBean.getName()+"!!!!"+b2.getName());
+        b2.setName("修改代理");
+        System.out.println(demoBean.getName()+"!!!!"+b2.getName());
+
+
+    }
 }

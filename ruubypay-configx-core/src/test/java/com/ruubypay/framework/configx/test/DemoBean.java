@@ -17,6 +17,7 @@ public class DemoBean {
     private double bDouble;
 
     public String getName() {
+        System.out.println(name);
         return name;
     }
 
@@ -54,5 +55,16 @@ public class DemoBean {
 
     public void setbDouble(double bDouble) {
         this.bDouble = bDouble;
+    }
+
+    @Override
+    public String toString() {
+        return "DemoBean{" +
+                "name='" + name + '\'' +
+                ", longS=" + longS +
+                ", longN=" + longN +
+                ", aDouble=" + aDouble +
+                ", bDouble=" + bDouble +
+                '}';
     }
 }
