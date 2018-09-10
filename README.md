@@ -350,7 +350,10 @@ javaBean和group的绑定默认是按照javaBean的字段名。即，会以字�
 如果想在配置中心加密存储配置：<br/>
 下面的配置就可以做到在配置中心存储加密的，而拉取到应用内会自动解密，加密存储的前提条件是该配置组有配置支持加密。<br/>
 ```java
-      AbstractGeneralConfigGroup node = new ZookeeperConfigGroup(zookeeperConfigProfile,"group");
+      //1870577f29dfrkfs为Des加解密使用的密匙
+      Encrypt encrypt = new EncryptByDes("1870577f29dfrkfs");
+      AbstractGeneralConfigGroup node = new ZookeeperConfigGroup(zookeeperConfigProfile,"group",encrypt);
+
       String password = node.encryptValue("root");
       node.set("password",password);
  ```
