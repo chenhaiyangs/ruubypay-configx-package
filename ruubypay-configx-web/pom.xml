@@ -56,7 +56,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.15</version>
+            <version>1.18</version>
         </dependency>
         <!-- lombok 消除java中必须要有，但是又显得很臃肿的代码。此插件实现了java及简代码 -->
         <dependency>

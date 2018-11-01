@@ -11,15 +11,22 @@ import java.security.Key;
  * AES加解密
  * @author chenhayyang
  */
+@SuppressWarnings("all")
 public class EncryptByAes implements Encrypt{
+
     /**
-     * 加密器
+     * 缓存加密时使用的Cipher
      */
-    private Cipher encryptCipher;
+    private ThreadLocal<Cipher> encryptThreadLocal=null;
     /**
-     * 解密器
+     * 缓存解密时使用的Cipher
      */
-    private Cipher decryptCipher;
+    private ThreadLocal<Cipher> decryptThreadLocal=null;
+    /**
+     * 密钥key
+     */
+    private Key convertSecretKey;
+
 
     public EncryptByAes(String key) throws Exception {
         init(key);
@@ -30,27 +37,44 @@ public class EncryptByAes implements Encrypt{
      * @throws Exception 异常
      */
     private void init(String key) throws Exception {
+        //生成key
         byte[] bytesKey = Hex.hexStringToBytes(key);
-        // KEY 转换
-        Key convertSecretKey = new SecretKeySpec(bytesKey,"AES");
-        this.encryptCipher= Cipher.getInstance("AES/ECB/PKCS5Padding");
-        this.decryptCipher= Cipher.getInstance("AES/ECB/PKCS5Padding");
-        //初始化加密组件
-        encryptCipher.init(Cipher.ENCRYPT_MODE, convertSecretKey);
-        //初始化解密组件
-        decryptCipher.init(Cipher.DECRYPT_MODE, convertSecretKey);
+        this.convertSecretKey = new SecretKeySpec(bytesKey,"AES");
+
+        //pre-test 在初始化时尝试生成栈内实例，防止ThreadLocal生成时发生错误
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, this.convertSecretKey);
+
+        encryptThreadLocal = ThreadLocal.withInitial(()->newCipher(Cipher.ENCRYPT_MODE));
+        decryptThreadLocal = ThreadLocal.withInitial(()->newCipher(Cipher.DECRYPT_MODE));
+    }
+
+    /**
+     * 为线程生成一个实例副本
+     * @param mode 加密模式为1，解密模式为2
+     * @return 返回Cipher
+     */
+    private Cipher newCipher(int mode){
+        try {
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(mode, this.convertSecretKey);
+            return cipher;
+        }catch (Exception e){
+            throw new UnsupportedOperationException(e);
+        }
     }
 
     @Override
     public String encrypt(String src) throws Exception {
-        byte[] resultBytes =  encryptCipher.doFinal(src.getBytes());
+        byte[] resultBytes =  encryptThreadLocal.get().doFinal(src.getBytes());
         return Hex.bytesToHexString(resultBytes);
     }
 
     @Override
     public String decrypt(String encrypt) throws Exception {
         byte[] encryptType = Hex.hexStringToBytes(encrypt);
-        byte[] resultBytes =  decryptCipher.doFinal(encryptType);
+        byte[] resultBytes =  decryptThreadLocal.get().doFinal(encryptType);
         return new String(resultBytes);
     }
+
 }
