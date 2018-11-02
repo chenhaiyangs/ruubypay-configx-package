@@ -376,6 +376,32 @@ javaBean和group的绑定默认是按照javaBean的字段名。即，会以字�
    demoBean.setName("hello config");
 ```
 调用了set方法将会更新配置中心对应的值
+
+# V1.3.0版本新增功能
+
+一，修复了内置加解密AES和DES 加解密的线程安全问题。Cipher对象是有状态的，使用了ThreadLocal进行包装，确保性能和安全性的折中。
+    
+    详见源码。
+    
+二，修复bug,客户端使用Map接ConfigGroup对象使用配置。如果使用lambda表达式foreach(k,v)获取配置时，可能获取到的value本该解密但没有解密的bug。
+
+    在put数据到group时，如果是加密过的数据直接解密后put。
+    
+三，新增本地配置覆盖zookeeper配置中心的配置的功能，用于集群环境下测试单点。
+
+    在程序启动时指定 java -DtestByLocal=true -jar xxx application.jar 
+    -DtestByLocal=true 表示启动本地调试模式。
+    
+    启动了本地调试模式。如果resource根目录（class文件根目录）存在 xxxgroup.properties。则加载配置会以本地的优先
+    例如，有一个组为datasource-group的组在配置中心。
+    此时，class根目录存在datasource-group.properties配置文件，则会加载该配置文件中的配置。
+    如果是datasource-group.properties有的配置项，在datasource-group配置中心存的配置则失效。
+    
+    该功能的价值为：在集群环境下测试单点。
+    
+    如：我怀疑又一个key的配置是不对的，不敢直接改。我可以先使用本地properties覆盖一下配置中心对应的group。测试集群中的一个节点。
+    
+
 # 注意事项
 
 一，源代码编译问题
