@@ -23,7 +23,7 @@ public abstract class AbstractGeneralConfigGroup extends ConcurrentHashMap<Strin
      */
     private Encrypt encrypt;
     /**
-     * 本地配置->用于在集群中调试单点。
+     * 本地配置：用于在集群中调试单点。
      * 如果overrideLocalConfig 有值，则不使用配置中心的值
      */
     private AbstractGeneralConfigGroup overrideLocalConfig;

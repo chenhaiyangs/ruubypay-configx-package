@@ -43,6 +43,7 @@ public class GenerateKeyUtil {
 
     /**
      * 根据密钥和原始报文使用DES算法加密一个信息，返回加密结果
+     * @param src 原文
      * @param key key 一个工具类
      * @return 返回加密结果
      * @throws NoSuchAlgorithmException 异常
@@ -54,6 +55,7 @@ public class GenerateKeyUtil {
 
     /**
      * 根据密钥和原始报文使用AES算法加密一个信息，返回加密结果
+     * @param src 原文
      * @param key key 一个工具类
      * @return 返回加密结果
      * @throws NoSuchAlgorithmException 异常
