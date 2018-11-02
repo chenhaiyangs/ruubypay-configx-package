@@ -81,7 +81,7 @@ javaBean较map相比，可能更具有维护性，每一个字段自解释每一
     <dependency>
         <groupId>com.github.chenhaiyangs</groupId>
         <artifactId>ruubypay-configx-core</artifactId>
-        <version>1.2.0</version>
+        <version>1.3.0</version>
      </dependency>
 ```   
 二，在java代码里直接获取配置
