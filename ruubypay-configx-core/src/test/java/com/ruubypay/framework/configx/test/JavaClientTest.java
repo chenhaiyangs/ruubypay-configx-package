@@ -6,6 +6,7 @@ import com.ruubypay.framework.configx.encrypt.impl.EncryptByAes;
 import com.ruubypay.framework.configx.proxy.ConfigBeanProxy;
 import com.ruubypay.framework.configx.zookeeper.ZookeeperConfigGroup;
 import com.ruubypay.framework.configx.zookeeper.ZookeeperConfigProfile;
+import com.sun.org.apache.bcel.internal.generic.GETFIELD;
 import org.junit.Test;
 
 public class JavaClientTest{
@@ -16,22 +17,32 @@ public class JavaClientTest{
      */
     @Test
     public void testGroup() throws Exception {
+
+        System.setProperty("testByLocal","true");
+
         ZookeeperConfigProfile zookeeperConfigProfile
                 = new ZookeeperConfigProfile("localhost:2181",
-                "/config/demoproject","1.0.0");
+                "/config/MISS.PushCenter","1.0.0");
 
-        AbstractGeneralConfigGroup generalConfigGroup = new ZookeeperConfigGroup(zookeeperConfigProfile,"demo-group");
-        for(int i=0;i<100;i++){
+        Encrypt encrypt = new EncryptByAes("a0f574ec51441f3e98011491f28b584d");
+
+        AbstractGeneralConfigGroup generalConfigGroup = new ZookeeperConfigGroup(zookeeperConfigProfile,"datasource-group",encrypt);
+        for(int i=0;i<1;i++){
             try {
                 Thread.sleep(10);
                 generalConfigGroup.forEach((k,v)->System.out.println(k+":"+v));
+                System.out.println("============================");
+                generalConfigGroup.forEach((k,v)->System.out.println(k+":"+ generalConfigGroup.get(k)));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        AbstractGeneralConfigGroup node = new ZookeeperConfigGroup(zookeeperConfigProfile,"group");
-        String password = node.encryptValue("root");
-        node.set("password",password);
+
+        System.out.println(generalConfigGroup.get("mysqlpassword"));
+        String password = generalConfigGroup.encryptValue("马大哈");
+        generalConfigGroup.set("mysqlpassword",password);
+        Thread.sleep(1000);
+        System.out.println(generalConfigGroup.get("mysqlpassword"));
     }
 
     /**

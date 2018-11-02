@@ -5,6 +5,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Throwables;
 import com.ruubypay.framework.configx.AbstractGeneralConfigGroup;
 import com.ruubypay.framework.configx.Encrypt;
+import com.ruubypay.framework.configx.local.LocalPropertiesConfigGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -31,6 +32,11 @@ import java.util.Map;
 @Slf4j
 public class ZookeeperConfigGroup extends AbstractGeneralConfigGroup {
     /**
+     * 是否启用本地配置的开关开启测试
+     */
+    private static final String LOCAL_ENABLED=System.getProperty("testByLocal");
+    private static final String LOCAL_ENABLED_OK="true";
+    /**
      * zk配置中心配置Bean
      */
     private ZookeeperConfigProfile configProfile;
@@ -52,8 +58,19 @@ public class ZookeeperConfigGroup extends AbstractGeneralConfigGroup {
         this.node = node;
         this.client=CuratorFrameworkFactory.newClient(configProfile.getConnectStr(),new ExponentialBackoffRetry(1000, 3));
         this.client.start();
+        //初始化zookeeper配置的本地配置组，如果有的话。注意：这一部分一定要先于initListener和loadNode
+        if(LOCAL_ENABLED_OK.equals(LOCAL_ENABLED)){
+            try {
+                AbstractGeneralConfigGroup localConfig = new LocalPropertiesConfigGroup(node);
+                super.setOverrideLocalConfig(localConfig);
+            }catch (Exception e){
+                log.warn("you set testByLocal=true,but when load localConfig find err! caused by"+e);
+            }
+        }
+
         initlistener();
         loadNode();
+
     }
 
     /**

@@ -22,6 +22,15 @@ public abstract class AbstractGeneralConfigGroup extends ConcurrentHashMap<Strin
      * 加密接口
      */
     private Encrypt encrypt;
+    /**
+     * 本地配置->用于在集群中调试单点。
+     * 如果overrideLocalConfig 有值，则不使用配置中心的值
+     */
+    private AbstractGeneralConfigGroup overrideLocalConfig;
+
+    protected void setOverrideLocalConfig(AbstractGeneralConfigGroup overrideLocalConfig){
+        this.overrideLocalConfig=overrideLocalConfig;
+    }
 
     protected AbstractGeneralConfigGroup(){}
     protected AbstractGeneralConfigGroup(Encrypt encrypt){
@@ -29,22 +38,13 @@ public abstract class AbstractGeneralConfigGroup extends ConcurrentHashMap<Strin
     }
 
     /**
-     * 根据key获取配置。处理加解密逻辑
+     * 根据key获取配置。
      * @param key key
      * @return 返回配置
      */
 	@Override
 	public final String get(String key){
-		String value =super.get(key);
-		if(value!=null&&value.startsWith(NEED_DECRYPT)&& encrypt!=null){
-		    value = value.substring(NEED_DECRYPT.length(),value.length());
-            try {
-                value=encrypt.decrypt(value);
-            } catch (Exception e) {
-                log.error("decrtpt key:{} value:{},err",key,value,e);
-            }
-        }
-        return value;
+       return super.get(key);
 	}
 
     /**
@@ -70,15 +70,15 @@ public abstract class AbstractGeneralConfigGroup extends ConcurrentHashMap<Strin
 
     /**
      * 对value进行加密
-     * @param vlaue 要加密的值
+     * @param value 要加密的值
      * @return 返回加密后的结果。可以直接在配置中心存储的格式，如 {cipher}xxxxxxx
      * @throws Exception 异常
      */
-    public String encryptValue(String vlaue) throws Exception {
+    public String encryptValue(String value) throws Exception {
         if(this.encrypt==null){
-            return vlaue;
+            return value;
         }
-        return String.format("%s%s",NEED_DECRYPT,encrypt.encrypt(vlaue));
+        return String.format("%s%s",NEED_DECRYPT,encrypt.encrypt(value));
     }
 
     /**
@@ -99,7 +99,7 @@ public abstract class AbstractGeneralConfigGroup extends ConcurrentHashMap<Strin
     }
 
     /**
-     * 向本地配置组添加配置
+     * 向本地配置组添加配置: 处理加解密逻辑和本地配置覆盖的逻辑
      * @param key key
      * @param value value
      * @return 返回上一次的配置值
@@ -112,10 +112,30 @@ public abstract class AbstractGeneralConfigGroup extends ConcurrentHashMap<Strin
 
         if (!Objects.equals(preValue, value)) {
             log.debug("Key {} change from {} to {}", key, preValue, value);
-            super.put(key, value);
+
+            String resultValue;
+            if(overrideLocalConfig!=null){
+                resultValue = overrideLocalConfig.get(key);
+                //如果本地无此配置，仍然沿用配置中心的配置
+                if(resultValue==null){
+                    resultValue=value;
+                }
+            }else{
+                resultValue=value;
+            }
+            //如果这个value是加密过的，直接在存储到本地map时就解密
+            if(resultValue.startsWith(NEED_DECRYPT)&& encrypt!=null){
+                resultValue = resultValue.substring(NEED_DECRYPT.length(),resultValue.length());
+                try {
+                    resultValue=encrypt.decrypt(resultValue);
+                } catch (Exception e) {
+                    log.error("decrtpt key:{} value:{},err",key,value,e);
+                }
+            }
+            super.put(key, resultValue);
             //如果值变了，通知观察者
             if (preValue != null) {
-                notify(key, value);
+                notify(key, resultValue);
             }
         }
         return preValue;

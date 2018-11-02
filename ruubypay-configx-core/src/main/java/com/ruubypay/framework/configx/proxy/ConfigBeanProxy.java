@@ -2,6 +2,7 @@ package com.ruubypay.framework.configx.proxy;
 
 import com.ruubypay.framework.configx.AbstractGeneralConfigGroup;
 import com.ruubypay.framework.configx.bean.annotation.ProperKey;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
@@ -17,6 +18,7 @@ import java.lang.reflect.Modifier;
  * @param <T> 被代理的对象
  */
 @SuppressWarnings("all")
+@Slf4j
 public class ConfigBeanProxy<T> implements MethodInterceptor{
     /**
      * set 方法
@@ -82,7 +84,9 @@ public class ConfigBeanProxy<T> implements MethodInterceptor{
                 if(needEncrypt){
                     value = node.encryptValue(value);
                 }
-                node.set(keyName,value);
+                if(!node.set(keyName,value)){
+                    log.warn("set key:{},value:{},fail",keyName,value);
+                }
             }
             return null;
 
