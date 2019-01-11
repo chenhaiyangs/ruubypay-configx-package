@@ -215,8 +215,7 @@ public class IndexController {
         value = StringUtils.trim(value);
         comment = StringUtils.trim(comment);
 
-        if(StringUtils.isBlank(version)||StringUtils.isBlank(group)||StringUtils.isBlank(key)||
-                StringUtils.isBlank(value)){
+        if(StringUtils.isBlank(version)||StringUtils.isBlank(group)||StringUtils.isBlank(key)){
             return new CommonResponse<>(true, null, null);
         }
 
@@ -257,8 +256,7 @@ public class IndexController {
         value = StringUtils.trim(value);
         comment = StringUtils.trim(comment);
 
-        if(StringUtils.isBlank(version)||StringUtils.isBlank(group)||StringUtils.isBlank(key)||
-                StringUtils.isBlank(value)){
+        if(StringUtils.isBlank(version)||StringUtils.isBlank(group)||StringUtils.isBlank(key)){
             return new CommonResponse<>(true, null, null);
         }
 
